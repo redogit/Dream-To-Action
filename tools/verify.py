@@ -1,4 +1,4 @@
-"""Check the preserved release, entry point, rebuild, and inline policy hashes."""
+"""Check the REDOGIT contract, preserved release, entry point, rebuild, and inline policy hashes."""
 from __future__ import annotations
 import base64
 import hashlib
@@ -12,12 +12,58 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'prototype'
+CONTRACT = ROOT / 'redogit.json'
 EXPECTED = {
     'dream-to-action.html', 'README.md', 'README.txt', 'PILOT.md', 'TESTING.md',
     'build.py', 'app.js', 'style.css', 'test_app.py', 'test-results.json',
     'example-journal.json',
 }
 GENERATED = ('dream-to-action.html', 'app.js', 'style.css')
+EXPECTED_HISTORY = {
+    'preserve_predecessors': True,
+    'preserve_failures': True,
+    'preserve_unresolved_remainder': True,
+    'preserve_source_native_identity': True,
+    'rewrite_history': False,
+}
+EXPECTED_CHECKS = ['assumption', 'test', 'unknown']
+EXPECTED_EVIDENCE_CLASSES = [
+    'executed-and-verified',
+    'externally-validated',
+    'formal-consequence',
+    'hypothesis-or-open-question',
+]
+REQUIRED_DISTINCTIONS = {
+    'UNKNOWN != ABSENT',
+    'UNASSIGNED != ABSENT',
+    'UNSELECTED != FALSE',
+    'INDEX_MISS != ABSENCE',
+    'RELATED != SUPPORTS',
+    'SEMANTIC_SIMILARITY != IDENTITY',
+    'SOURCE != RECONSTRUCTION',
+    'BYTE_IDENTITY != SEMANTIC_TRUTH',
+    'CURRENT_NAVIGATION != HISTORICAL_SOURCE',
+    'OBSERVATION != INTERPRETATION',
+    'VIEWPOINT_CHANGE != TASK_CHANGE',
+    'SELECTION != GLOBAL_OPTIMALITY',
+    'FINITE_VERIFICATION != UNIVERSALITY',
+    'LOSS_ACKNOWLEDGED != LOSS_CONCEALED',
+    'EVALUATION_COMPLETE != PROMOTION_APPROVED',
+    'PERSON != RECORDED_MODEL',
+    'USER_GOAL != SYSTEM_GOAL',
+    'PREDECESSOR != SUCCESSOR',
+    'INTERNAL_CONSISTENCY != EXTERNAL_VALIDATION',
+    'CLAIM != EVIDENCE',
+}
+DREAM_DISTINCTIONS = {
+    'GOAL != OUTCOME',
+    'PLAN != PROMISE',
+    'NAMED_HELPER != CONFIRMED_COMMITMENT',
+    'REVIEW_DATE != REMINDER',
+    'HARDSHIP != PERSONAL_FAILURE',
+    'USER_INPUT != VERIFIED_FACT',
+    'ACCESSIBLE_MARKUP != ASSISTIVE_TECHNOLOGY_CERTIFICATION',
+}
 
 
 def require(condition: bool, message: str) -> None:
@@ -25,7 +71,31 @@ def require(condition: bool, message: str) -> None:
         raise ValueError(message)
 
 
+def verify_contract() -> None:
+    contract = json.loads(CONTRACT.read_text(encoding='utf-8'))
+    require(contract.get('schema') == 'redogit/v1', 'Unexpected REDOGIT schema')
+    require(contract.get('repository') == 'redogit/Dream-To-Action', 'Unexpected REDOGIT repository')
+    current = contract.get('current')
+    require(isinstance(current, dict), 'Missing REDOGIT current object')
+    require(current.get('status') == 'current', 'Dream to Action REDOGIT status is not current')
+    require(current.get('verify') == 'python3 tools/verify.py', 'Declared verifier changed')
+    require(contract.get('history_policy') == EXPECTED_HISTORY, 'History policy changed')
+
+    research = contract.get('research_policy')
+    require(isinstance(research, dict), 'Missing research policy')
+    require(research.get('surface') == 'I/R/P/O', 'Research surface changed')
+    require(research.get('checks') == EXPECTED_CHECKS, 'Research checks changed')
+    require(research.get('evidence_classes') == EXPECTED_EVIDENCE_CLASSES, 'Evidence classes changed')
+    distinctions = research.get('required_distinctions')
+    require(isinstance(distinctions, list), 'Required distinctions missing')
+    require(REQUIRED_DISTINCTIONS.issubset(set(distinctions)), 'A shared REDOGIT distinction is missing')
+    domain = research.get('domain_distinctions')
+    require(isinstance(domain, list), 'Dream domain distinctions missing')
+    require(DREAM_DISTINCTIONS.issubset(set(domain)), 'A Dream to Action distinction is missing')
+
+
 def main() -> None:
+    verify_contract()
     entries: dict[str, str] = {}
     for line in (SOURCE / 'MANIFEST.sha256').read_text(encoding='utf-8').splitlines():
         match = re.fullmatch(r'([0-9a-f]{64})  ([A-Za-z0-9_.-]+)', line)
@@ -66,7 +136,8 @@ def main() -> None:
     require("connect-src 'none'" in policy, 'Application connection restriction changed')
     for name in ('test-results.json', 'example-journal.json'):
         json.loads((SOURCE / name).read_text(encoding='utf-8'))
-    print(json.dumps({'result': 'PASS', 'release_hashes': len(entries),
+    print(json.dumps({'result': 'PASS', 'redogit_contract': True,
+                      'release_hashes': len(entries),
                       'preserved_files': len(EXPECTED) + 1,
                       'canonical_rebuild_matches': len(GENERATED),
                       'root_entry_point_identical': True, 'inline_policy_hashes_match': True}, indent=2))
