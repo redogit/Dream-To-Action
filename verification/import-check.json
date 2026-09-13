@@ -1,0 +1,27 @@
+{
+  "scope": "Publication preparation; local checks and GitHub subtree identity, not a hosted deployment or real-world pilot",
+  "run_started_utc": "2026-09-13T13:57:33.849515+00:00",
+  "run_finished_utc": "2026-09-13T13:57:40.059512+00:00",
+  "original_archive_sha256": "765770675c800d05a592e07e34f5b1c520657cab03cbffa3466b6bf19c54c1c4",
+  "original_package_files": 12,
+  "manifest_file_hashes_checked": 11,
+  "prototype_git_tree": "b371f793363af7633ae34ec8b13456d419bcf85c",
+  "local_original_and_created_github_subtree_match": true,
+  "canonical_rebuild_matches": 3,
+  "root_entry_point_identical": true,
+  "inline_policy_hashes_match": true,
+  "application_sha256": "efa6372b2fd180a52a9024b6caa2b992f19dc50f2f10f84f31c783bfb28aef09",
+  "browser_checks": {
+    "result": "PASS",
+    "passed": 43,
+    "failed": 0,
+    "browser": "Chromium 144.0.7559.96",
+    "driver": "Playwright Python",
+    "mode": "Original test_app.py in a disposable copy; identical HTML supplied through page.set_content",
+    "uncaught_errors": 0,
+    "console_errors": 0,
+    "suite_result_sha256": "99b0d7d2382972271e755b1172a0a6e3e06ce6ad85eeb64eff3d34c1312f2786",
+    "result_bytes_match_preserved_test_results": true
+  },
+  "qualification": "The original harness retains a fixed date and historical environment wording. These wrapper timestamps identify the new execution. No direct file/HTTP navigation, screen-reader session, accessibility certification, independent security audit, or participant pilot was performed by this rerun. Repeated checks are not independent demonstrations of real-world benefit. GitHub workflow status is separate from this local record."
+}

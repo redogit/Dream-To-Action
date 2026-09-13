@@ -1,0 +1,57 @@
+
+:root { color-scheme: light; --ink:#152d35; --muted:#425a61; --paper:#f5f4ef; --white:#fff; --line:#b8c6c8; --accent:#07584f; --soft:#e9f1ed; --warn:#713b00; --error:#9f1d20; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); font:1.05rem/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-decoration-thickness:.12em; text-underline-offset:.16em; }
+button,input,textarea,select { font:inherit; }
+button,a,input,textarea,select,summary { touch-action:manipulation; }
+:focus-visible { outline:3px solid #111; outline-offset:4px; }
+.skip { position:absolute; top:-8rem; left:1rem; background:white; padding:1rem; z-index:10; }
+.skip:focus { top:1rem; }
+header,main,footer { max-width:72rem; margin:auto; padding:1.5rem; }
+header { padding-top:2.5rem; padding-bottom:1rem; }
+.kicker { text-transform:uppercase; letter-spacing:.13em; font-size:.8rem; font-weight:750; }
+h1 { font-size:clamp(2.3rem,5vw,3.8rem); line-height:1.12; margin:.5rem 0 1rem; letter-spacing:-.035em; }
+h2 { line-height:1.25; font-size:1.55rem; margin:0 0 1rem; }
+h3 { font-size:1.12rem; margin:1.5rem 0 .4rem; }
+p { max-width:72ch; }
+.lead { font-size:1.2rem; max-width:58ch; }
+.muted,.hint { color:var(--muted); }
+.hint { font-size:.94rem; margin:.35rem 0 .7rem; }
+.notice { border-left:5px solid var(--accent); background:var(--soft); padding:1rem 1.3rem; margin:1.1rem 0; }
+.notice p { margin:.2rem 0; }
+.layout { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:1.5rem; align-items:start; }
+.panel { background:var(--white); border:1px solid var(--line); border-radius:.8rem; padding:1.5rem; margin-bottom:1.5rem; min-width:0; }
+fieldset { border:0; margin:0 0 1.5rem; padding:0; min-width:0; }
+legend { font-size:1.15rem; font-weight:750; margin-bottom:1rem; padding:0; }
+.field { margin-bottom:1rem; }
+label { display:block; font-weight:650; margin-bottom:.4rem; }
+input,textarea,select { display:block; width:100%; border:1.5px solid #758d94; border-radius:.35rem; padding:.65rem; background:white; color:var(--ink); min-height:2.9rem; }
+textarea { min-height:6.5rem; resize:vertical; }
+[aria-invalid="true"] { border:2px solid var(--error); }
+.buttons { display:flex; gap:.75rem; flex-wrap:wrap; margin:1rem 0; }
+button { min-height:2.85rem; padding:.65rem 1rem; border:2px solid var(--accent); border-radius:.4rem; background:var(--accent); color:white; cursor:pointer; font-weight:650; }
+button.secondary { color:var(--accent); background:white; }
+button.danger { border-color:var(--error); color:var(--error); background:white; }
+button:hover { text-decoration:underline; }
+button:disabled { opacity:.6; cursor:not-allowed; }
+small { font-size:.9rem; }
+summary { font-weight:650; cursor:pointer; padding:.5rem 0; }
+details { margin:.75rem 0; }
+.error { border:2px solid var(--error); padding:1rem; margin-bottom:1rem; }
+.error p { margin-top:0; font-weight:700; }
+#status { min-height:1.6em; font-weight:650; }
+.pill { display:inline-block; padding:.25rem .65rem; background:var(--soft); border:1px solid var(--accent); border-radius:.3rem; font-weight:650; }
+.warning { color:var(--warn); }
+dl { margin:1rem 0; }
+dt { font-weight:700; margin-top:1rem; }
+dd { margin:.2rem 0 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+#history-list { padding-left:1.5rem; }
+#history-list li { margin-bottom:1.3rem; padding-left:.2rem; }
+#history-list p { margin:.3rem 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.meta { font-size:.9rem; color:var(--muted); }
+.rule { font-size:1.15rem; font-weight:650; }
+footer { padding-bottom:3rem; border-top:1px solid var(--line); }
+[hidden] { display:none!important; }
+@media(max-width:50rem) { .layout { grid-template-columns:1fr; } header,main,footer { padding:1.1rem; } .panel { padding:1.1rem; } }
+@media print { body { background:white; color:black; font-size:11pt; } header,footer { padding:.4rem; } main { padding:0; } .layout { display:block; } .no-print,#status,#errors,#edit-panel,#review-panel,#file-panel { display:none!important; } .panel { border:0; padding:0; } h1 { font-size:24pt; } #preview-panel { display:block; } #history-list li { break-inside:avoid; } }

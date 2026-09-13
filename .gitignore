@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+.test-output/
+prototype/_test_*
+prototype/preview.png
+dream-to-action-journal*.json
+dream-to-action-report*.txt

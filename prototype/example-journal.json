@@ -1,0 +1,44 @@
+{
+  "app": "Dream to Action",
+  "schemaVersion": "1.0",
+  "exportedAt": "2026-09-13T13:27:04.689Z",
+  "draft": {
+    "goal": "Complete a work report independently and keep control over my working time.",
+    "barrier": "The report template has unclear field labels, and the keyboard path has not been checked.",
+    "action": "Use a fictional sample report to check the required fields and keyboard path; record one blocking issue.",
+    "evidence": "The blocking field can be identified and completed using the chosen access method, and the completed output is checked against the sample.",
+    "readiness": "unknown",
+    "owner": "The person choosing this goal",
+    "support": "A blank sample template and an agreed route to the person who can change it.",
+    "helper": "Template owner — not contacted by this tool",
+    "supportStatus": "unknown",
+    "constraints": "Use fictional data. Do not submit real work or automate consequential decisions. Stop if the output is unreliable.",
+    "reviewDate": "",
+    "kind": "illustrative"
+  },
+  "reviewDraft": {
+    "outcome": "unresolved",
+    "note": ""
+  },
+  "plans": [
+    {
+      "id": "p-0001",
+      "createdAt": "2026-09-13T13:27:04.191Z",
+      "fields": {
+        "goal": "Complete a work report independently and keep control over my working time.",
+        "barrier": "The report template has unclear field labels, and the keyboard path has not been checked.",
+        "action": "Use a fictional sample report to check the required fields and keyboard path; record one blocking issue.",
+        "evidence": "The blocking field can be identified and completed using the chosen access method, and the completed output is checked against the sample.",
+        "readiness": "unknown",
+        "owner": "The person choosing this goal",
+        "support": "A blank sample template and an agreed route to the person who can change it.",
+        "helper": "Template owner — not contacted by this tool",
+        "supportStatus": "unknown",
+        "constraints": "Use fictional data. Do not submit real work or automate consequential decisions. Stop if the output is unreliable.",
+        "reviewDate": "",
+        "kind": "illustrative"
+      }
+    }
+  ],
+  "observations": []
+}

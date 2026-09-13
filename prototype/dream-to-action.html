@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-R9F+Taz3byM8hyE/hHbQp2+/7VkhnwLagplMuANRG6Q='; style-src 'sha256-uotKH2e8E8vW1RU0Y1NpC5rX1EJwdZsv2LJF6zvlFgg='; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="description" content="A local, person-directed workbench for one goal, one barrier, one next step, and an honest review.">
+<title>Dream to Action — One goal. One barrier. One next step.</title>
+<style>
+:root { color-scheme: light; --ink:#152d35; --muted:#425a61; --paper:#f5f4ef; --white:#fff; --line:#b8c6c8; --accent:#07584f; --soft:#e9f1ed; --warn:#713b00; --error:#9f1d20; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); font:1.05rem/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-decoration-thickness:.12em; text-underline-offset:.16em; }
+button,input,textarea,select { font:inherit; }
+button,a,input,textarea,select,summary { touch-action:manipulation; }
+:focus-visible { outline:3px solid #111; outline-offset:4px; }
+.skip { position:absolute; top:-8rem; left:1rem; background:white; padding:1rem; z-index:10; }
+.skip:focus { top:1rem; }
+header,main,footer { max-width:72rem; margin:auto; padding:1.5rem; }
+header { padding-top:2.5rem; padding-bottom:1rem; }
+.kicker { text-transform:uppercase; letter-spacing:.13em; font-size:.8rem; font-weight:750; }
+h1 { font-size:clamp(2.3rem,5vw,3.8rem); line-height:1.12; margin:.5rem 0 1rem; letter-spacing:-.035em; }
+h2 { line-height:1.25; font-size:1.55rem; margin:0 0 1rem; }
+h3 { font-size:1.12rem; margin:1.5rem 0 .4rem; }
+p { max-width:72ch; }
+.lead { font-size:1.2rem; max-width:58ch; }
+.muted,.hint { color:var(--muted); }
+.hint { font-size:.94rem; margin:.35rem 0 .7rem; }
+.notice { border-left:5px solid var(--accent); background:var(--soft); padding:1rem 1.3rem; margin:1.1rem 0; }
+.notice p { margin:.2rem 0; }
+.layout { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:1.5rem; align-items:start; }
+.panel { background:var(--white); border:1px solid var(--line); border-radius:.8rem; padding:1.5rem; margin-bottom:1.5rem; min-width:0; }
+fieldset { border:0; margin:0 0 1.5rem; padding:0; min-width:0; }
+legend { font-size:1.15rem; font-weight:750; margin-bottom:1rem; padding:0; }
+.field { margin-bottom:1rem; }
+label { display:block; font-weight:650; margin-bottom:.4rem; }
+input,textarea,select { display:block; width:100%; border:1.5px solid #758d94; border-radius:.35rem; padding:.65rem; background:white; color:var(--ink); min-height:2.9rem; }
+textarea { min-height:6.5rem; resize:vertical; }
+[aria-invalid="true"] { border:2px solid var(--error); }
+.buttons { display:flex; gap:.75rem; flex-wrap:wrap; margin:1rem 0; }
+button { min-height:2.85rem; padding:.65rem 1rem; border:2px solid var(--accent); border-radius:.4rem; background:var(--accent); color:white; cursor:pointer; font-weight:650; }
+button.secondary { color:var(--accent); background:white; }
+button.danger { border-color:var(--error); color:var(--error); background:white; }
+button:hover { text-decoration:underline; }
+button:disabled { opacity:.6; cursor:not-allowed; }
+small { font-size:.9rem; }
+summary { font-weight:650; cursor:pointer; padding:.5rem 0; }
+details { margin:.75rem 0; }
+.error { border:2px solid var(--error); padding:1rem; margin-bottom:1rem; }
+.error p { margin-top:0; font-weight:700; }
+#status { min-height:1.6em; font-weight:650; }
+.pill { display:inline-block; padding:.25rem .65rem; background:var(--soft); border:1px solid var(--accent); border-radius:.3rem; font-weight:650; }
+.warning { color:var(--warn); }
+dl { margin:1rem 0; }
+dt { font-weight:700; margin-top:1rem; }
+dd { margin:.2rem 0 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+#history-list { padding-left:1.5rem; }
+#history-list li { margin-bottom:1.3rem; padding-left:.2rem; }
+#history-list p { margin:.3rem 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.meta { font-size:.9rem; color:var(--muted); }
+.rule { font-size:1.15rem; font-weight:650; }
+footer { padding-bottom:3rem; border-top:1px solid var(--line); }
+[hidden] { display:none!important; }
+@media(max-width:50rem) { .layout { grid-template-columns:1fr; } header,main,footer { padding:1.1rem; } .panel { padding:1.1rem; } }
+@media print { body { background:white; color:black; font-size:11pt; } header,footer { padding:.4rem; } main { padding:0; } .layout { display:block; } .no-print,#status,#errors,#edit-panel,#review-panel,#file-panel { display:none!important; } .panel { border:0; padding:0; } h1 { font-size:24pt; } #preview-panel { display:block; } #history-list li { break-inside:avoid; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the workbench</a>
+<header>
+<p class="kicker">Dream to Action / Local prototype 0.1</p>
+<h1>A fair chance starts<br>with a usable next step.</h1>
+<p class="lead">Choose the life you want to work toward. Name what stands in the way. Separate your effort from the support and changes others need to provide.</p>
+<div class="notice"><p><strong>You are not a score.</strong> This tool records a plan, not your worth. You can change your goal, ask for support, pause, or stop.</p></div>
+<p class="hint no-print"><strong>No account or automatic upload.</strong> Entries stay in this page's memory until you export them. Exported files are unencrypted. Your browser or device may retain traces; this is not a secure vault. Closing or reloading can lose unsaved work.</p>
+<noscript><div class="notice"><p>JavaScript is disabled. The form remains readable, but snapshots, exports, and review records require JavaScript. The companion PILOT.md is a plain-text alternative.</p></div></noscript>
+</header>
+<main id="main" tabindex="-1">
+<p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
+<div id="errors" class="error" tabindex="-1" role="alert" aria-atomic="true" hidden></div>
+<div class="layout">
+<div>
+<section class="panel" id="edit-panel" aria-labelledby="edit-title">
+<h2 id="edit-title">Build one practical step</h2>
+<p class="hint" id="form-help">Four fields are required: goal, barrier, next action, and evidence of progress. Everything else can remain unknown. Do not enter passwords, account numbers, or other sensitive identifiers.</p>
+<form id="plan-form" novalidate autocomplete="off" aria-describedby="form-help">
+<fieldset><legend>1. Your aim and the real barrier</legend>
+<div class="field"><label for="goal">What life improvement are you working toward? (required)</label><textarea id="goal" name="goal" maxlength="4000" required aria-describedby="goal-help"></textarea><p class="hint" id="goal-help">Use your own words. A peaceful ordinary life counts; wealth is not the required goal.</p></div>
+<div class="field"><label for="barrier">What is getting in the way? (required)</label><textarea id="barrier" name="barrier" maxlength="4000" required aria-describedby="barrier-help"></textarea><p class="hint" id="barrier-help">A barrier can be cost, access, time, missing information, a process, or something else. It is not a judgment about you.</p></div>
+</fieldset>
+<fieldset><legend>2. A step you choose</legend>
+<div class="field"><label for="action">What is the next concrete action? (required)</label><textarea id="action" name="action" maxlength="4000" required aria-describedby="action-help"></textarea><p class="hint" id="action-help">Make it small enough to try. Asking for a necessary change can be the action.</p></div>
+<div class="field"><label for="evidence">What observable change would count as progress? (required)</label><textarea id="evidence" name="evidence" maxlength="4000" required aria-describedby="evidence-help"></textarea><p class="hint" id="evidence-help">Measure whether the barrier changed or the action became usable, not how many boxes you checked.</p></div>
+<div class="field"><label for="readiness">Is this step feasible and acceptable to you now?</label><select id="readiness" name="readiness"><option value="unknown">I do not know yet</option><option value="ready">I believe it is ready to try</option><option value="blocked">Support or a change is needed first</option><option value="paused">I choose to pause</option></select></div>
+</fieldset>
+<details id="support-details"><summary>Support, responsibility, and review (optional)</summary>
+<fieldset><legend>3. Do not carry the whole burden yourself</legend>
+<div class="field"><label for="owner">Who will take the next action?</label><input id="owner" name="owner" maxlength="4000" value="Me" aria-describedby="owner-help"><p class="hint" id="owner-help">Naming another person does not mean they have agreed. Record only a role or nickname when sufficient.</p></div>
+<div class="field"><label for="support">What support or external change does the next action need?</label><textarea id="support" name="support" maxlength="4000" aria-describedby="support-help"></textarea><p class="hint" id="support-help">For example: an accessible form, transport, time, equipment, an introduction, or an institutional decision.</p></div>
+<div class="field"><label for="helper">Who could provide that support or change?</label><input id="helper" name="helper" maxlength="4000" aria-describedby="helper-help"><p class="hint" id="helper-help">This is a proposed dependency, not an assigned obligation or a message to that person.</p></div>
+<div class="field"><label for="supportStatus">Has the required support been confirmed?</label><select id="supportStatus" name="supportStatus"><option value="unknown">Unknown / not confirmed</option><option value="requested">Requested, awaiting an answer</option><option value="confirmed">Confirmed, according to my information</option><option value="unavailable">Not available</option><option value="not_needed">No outside support needed for this step</option></select></div>
+<div class="field"><label for="constraints">What limits must the step respect?</label><textarea id="constraints" name="constraints" maxlength="4000" aria-describedby="constraints-help"></textarea><p class="hint" id="constraints-help">Time, cost, accessibility, consent, privacy, effects on others, or a reason to stop. No financial details are required.</p></div>
+<div class="field"><label for="reviewDate">When will you review it? (optional date)</label><input id="reviewDate" name="reviewDate" type="date" aria-describedby="review-help"><p class="hint" id="review-help">A planning date only. This tool does not schedule or send reminders.</p></div>
+<div class="field"><label for="kind">What kind of record is this?</label><select id="kind" name="kind"><option value="self_reported">My plan — self-reported</option><option value="illustrative">Illustrative example — not a real result</option></select></div>
+</fieldset></details>
+<div class="buttons"><button type="submit">Save a plan snapshot</button><button type="button" id="example" class="secondary">Load an example</button></div>
+<p class="hint">Snapshots are kept in this open page, not automatically saved to disk. Each revision is added to the journal. Export the journal to keep it.</p>
+</form>
+</section>
+<section class="panel" id="review-panel" aria-labelledby="review-title">
+<h2 id="review-title">Record what actually happened</h2>
+<p class="hint" id="review-form-help">Save a plan snapshot first. Record observations without turning a setback into a judgment about the person. Both fields below are required.</p>
+<form id="review-form" novalidate autocomplete="off" aria-describedby="review-form-help">
+<div class="field"><label for="outcome">What changed? (required)</label><select id="outcome" name="outcome"><option value="unresolved">Still unresolved / not enough evidence</option><option value="improved">The barrier was reduced or access improved</option><option value="achieved">The chosen goal was reached</option><option value="no_change">No improvement observed</option><option value="harm">Harm or an unacceptable cost was observed</option><option value="changed_goal">I chose a different goal or direction</option></select></div>
+<div class="field"><label for="observation">What did you observe, and what remains unresolved? (required)</label><textarea id="observation" name="observation" maxlength="4000" required aria-describedby="observation-help"></textarea><p class="hint" id="observation-help">Distinguish what happened from what you think caused it. Do not include private information about other people.</p></div>
+<button type="submit" id="record-review" class="secondary">Add an observation</button>
+</form>
+</section>
+</div>
+<div>
+<section class="panel" id="preview-panel" aria-labelledby="preview-title">
+<h2 id="preview-title" tabindex="-1">Your current plan snapshot</h2>
+<p id="empty-preview">No snapshot yet. Start with the four required fields, or load the illustrative example.</p>
+<div id="preview-content" hidden></div>
+</section>
+<section class="panel" id="file-panel" aria-labelledby="file-title">
+<h2 id="file-title">Keep it under your control</h2>
+<p class="hint">The journal preserves the current draft, snapshots, and observations. A readable report includes the same information. Neither file is encrypted.</p>
+<div class="buttons"><button type="button" id="export-json">Export journal (.json)</button><button type="button" id="export-text" class="secondary">Export readable report (.txt)</button><button type="button" id="print" class="secondary">Print saved plan and history</button></div>
+<p class="hint">Printing excludes unsaved draft edits. Exporting the journal or readable report includes them.</p>
+<div class="field"><label for="import-file">Restore an exported journal (.json; at most 1 MiB)</label><input type="file" id="import-file" accept=".json,application/json" aria-describedby="import-help"><p class="hint" id="import-help">Import replaces the open journal after confirmation. A file is treated as unverified user data, never as executable instructions.</p></div>
+<button type="button" id="clear" class="danger">Clear this open journal</button>
+<p class="hint">Clearing does not delete files you already exported or remove browser/device traces.</p>
+</section>
+<section class="panel" id="history-panel" aria-labelledby="history-title">
+<h2 id="history-title">Plan and observation history</h2>
+<p class="hint">Entries remain separate in this interface. Timestamps come from the device or imported file; this is not a tamper-proof audit log or independently verified evidence.</p>
+<p id="empty-history">No recorded entries.</p>
+<ol id="history-list"></ol>
+</section>
+</div>
+</div>
+</main>
+<footer>
+<p class="rule">A plan is not an opportunity until the needed conditions are actually available.</p>
+<p>This prototype helps organize action. It cannot supply housing, jobs, care, funding, legal rights, or another person's agreement. It does not decide eligibility, rank people, or make decisions for you.</p>
+<p class="hint">Designed with native labeled controls, keyboard operation, and announced feedback. Automated checks do not replace testing with the people and assistive technologies who will use it. English-language prototype; not universal-access or WCAG certification.</p>
+</footer>
+<script>
+'use strict';
+(() => {
+  const VERSION = '1.0';
+  const APP = 'Dream to Action';
+  const LIMIT = 4000, MAX_ENTRIES = 500, MAX_BYTES = 1048576;
+  const ids = ['goal','barrier','action','evidence','readiness','owner','support','helper','supportStatus','constraints','reviewDate','kind'];
+  const required = ['goal','barrier','action','evidence'];
+  const labels = {
+    goal:'Chosen life improvement',barrier:'Barrier',action:'Next action',evidence:'Observable sign of progress',readiness:'Self-assessed readiness',
+    owner:'Proposed action owner',support:'Required support or external change',helper:'Proposed support provider',supportStatus:'Support confirmation',
+    constraints:'Limits and stop conditions',reviewDate:'Review date (no reminder scheduled)',kind:'Record type'
+  };
+  const choices = {
+    readiness:{unknown:'I do not know yet',ready:'I believe it is ready to try',blocked:'Support or a change is needed first',paused:'I choose to pause'},
+    supportStatus:{unknown:'Unknown / not confirmed',requested:'Requested, awaiting an answer',confirmed:'Confirmed, according to my information',unavailable:'Not available',not_needed:'No outside support needed for this step'},
+    kind:{self_reported:'My plan — self-reported',illustrative:'Illustrative example — not a real result'},
+    outcome:{unresolved:'Still unresolved / not enough evidence',improved:'The barrier was reduced or access improved',achieved:'The chosen goal was reached',no_change:'No improvement observed',harm:'Harm or an unacceptable cost was observed',changed_goal:'I chose a different goal or direction'}
+  };
+  const $ = id => document.getElementById(id);
+  let plans = [], observations = [], fileDirty = false, importBusy = false;
+  const stamp = () => new Date().toISOString();
+  const readDraft = () => Object.fromEntries(ids.map(id => [id, $(id).value]));
+  const blank = () => Object.fromEntries(ids.map(id => [id, id === 'owner' ? 'Me' : id === 'readiness' || id === 'supportStatus' ? 'unknown' : id === 'kind' ? 'self_reported' : '']));
+  const latest = () => plans[plans.length-1];
+  const same = (a,b) => ids.every(id => a[id] === b[id]);
+  const hasContent = () => plans.length > 0 || observations.length > 0 || !same(readDraft(),blank()) || $('observation').value.trim() !== '';
+  const planIsDirty = () => !latest() || !same(readDraft(),latest().fields);
+  const setDraft = fields => ids.forEach(id => { $(id).value = fields[id]; });
+  function say(message) { $('status').textContent = message; }
+  function clearErrors() {
+    $('errors').replaceChildren(); $('errors').hidden = true;
+    document.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+  }
+  function fail(messages) {
+    clearErrors();
+    const p = document.createElement('p'); p.textContent = 'Please address the following:';
+    const ul = document.createElement('ul');
+    messages.forEach(([id,message]) => {
+      const li = document.createElement('li');
+      if (id && $(id)) {
+        const a = document.createElement('a'); a.href = '#' + id; a.textContent = message;
+        a.addEventListener('click',event => {
+          event.preventDefault(); const field = $(id); const details = field.closest('details');
+          if (details) details.open = true; field.focus();
+        });
+        li.append(a); $(id).setAttribute('aria-invalid','true');
+      } else li.textContent = message;
+      ul.append(li);
+    });
+    $('errors').append(p,ul); $('errors').hidden = false; $('errors').focus();
+  }
+  function validDate(value) {
+    if (!value) return true;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || value.startsWith('0000')) return false;
+    const date = new Date(value+'T00:00:00.000Z');
+    return !Number.isNaN(date.getTime()) && date.toISOString().slice(0,10) === value;
+  }
+  function validateFields(fields, requireComplete) {
+    const problems = [];
+    ids.forEach(id => {
+      if (typeof fields[id] !== 'string' || fields[id].length > LIMIT) problems.push([id,labels[id]+' must be text of at most '+LIMIT+' characters.']);
+      else if (choices[id] && !Object.hasOwn(choices[id],fields[id])) problems.push([id,labels[id]+' has an unsupported value.']);
+    });
+    if (requireComplete) required.forEach(id => { if (typeof fields[id] === 'string' && !fields[id].trim()) problems.push([id,labels[id]+' is required.']); });
+    if (typeof fields.reviewDate === 'string' && !validDate(fields.reviewDate)) problems.push(['reviewDate','Enter a valid review date or leave it blank.']);
+    return problems;
+  }
+  function feasibility(fields) {
+    if (fields.readiness === 'paused') return 'Paused by choice — no action is required by this tool.';
+    if (fields.support.trim() && fields.supportStatus === 'not_needed') return 'Clarify support: a required dependency is listed, but marked not needed. The tool cannot resolve that contradiction.';
+    if (fields.supportStatus === 'unavailable') return 'Needs a different support path — the listed support is not available.';
+    if (fields.support.trim() && fields.supportStatus !== 'confirmed') return 'Required support is not confirmed. Do not count this step as available yet.';
+    if (fields.readiness === 'blocked') return 'Support or a change is needed first. This is a condition of the step, not a personal failure.';
+    if (fields.readiness === 'ready' && (fields.supportStatus === 'confirmed' || fields.supportStatus === 'not_needed')) return 'Ready to consider trying, by your report — feasibility and safety are not independently verified.';
+    return 'Feasibility is still unconfirmed. Check time, cost, access, consent, and required support before acting.';
+  }
+  const display = (id,value) => choices[id] ? choices[id][value] : value || 'Not specified';
+  function make(tag,text,className) { const el = document.createElement(tag); el.textContent = text; if (className) el.className = className; return el; }
+  function fieldsDL(fields) {
+    const dl = document.createElement('dl');
+    ids.forEach(id => dl.append(make('dt',labels[id]),make('dd',display(id,fields[id]))));
+    return dl;
+  }
+  function render() {
+    const item = latest();
+    $('empty-preview').hidden = Boolean(item); $('preview-content').hidden = !item;
+    $('preview-content').replaceChildren();
+    if (item) {
+      $('preview-content').append(make('p',display('kind',item.fields.kind),'pill'),make('p',feasibility(item.fields),'notice'),make('p','Snapshot '+item.id+' · '+item.createdAt,'meta'),fieldsDL(item.fields));
+      if (planIsDirty()) $('preview-content').prepend(make('p','Draft changes are not in this saved snapshot yet. Export includes the draft; printing does not.','warning'));
+    }
+    $('history-list').replaceChildren();
+    // Preserve snapshot order and each snapshot's observation order rather than trusting imported clocks.
+    for (const p of plans) {
+      const li = document.createElement('li');
+      li.append(make('p','Plan '+p.id+' · '+p.createdAt,'meta'),make('p',p.fields.goal),make('p','Action: '+p.fields.action));
+      const details = document.createElement('details'); details.append(make('summary','Read this plan snapshot'),fieldsDL(p.fields)); li.append(details);
+      $('history-list').append(li);
+      for (const o of observations.filter(o => o.planId === p.id)) {
+        const review = document.createElement('li');
+        review.append(make('p','Observation '+o.id+' about '+o.planId+' · '+o.createdAt,'meta'),make('p',display('outcome',o.outcome)),make('p',o.note));
+        $('history-list').append(review);
+      }
+    }
+    $('empty-history').hidden = plans.length > 0;
+  }
+  function savePlan(event) {
+    event.preventDefault(); clearErrors(); const fields = readDraft();
+    const errors = validateFields(fields,true);
+    if (plans.length >= MAX_ENTRIES) errors.push([null,'This journal has reached 500 plan snapshots. Export it and start a new journal.']);
+    if (errors.length) return fail(errors);
+    const id = 'p-'+String(plans.length+1).padStart(4,'0');
+    plans.push({id,createdAt:stamp(),fields}); fileDirty = true; render(); say('Plan snapshot '+id+' recorded in this page. Export the journal to keep it.');
+  }
+  $('plan-form').addEventListener('submit',savePlan);
+  $('plan-form').addEventListener('input',() => { fileDirty = true; render(); });
+  $('plan-form').addEventListener('change',() => { fileDirty = true; render(); });
+  $('observation').addEventListener('input',() => { fileDirty = true; });
+  $('outcome').addEventListener('change',() => { fileDirty = true; });
+  $('review-form').addEventListener('submit',event => {
+    event.preventDefault(); clearErrors(); const errors = [];
+    if (!latest()) errors.push([null,'Save a plan snapshot before adding an observation.']);
+    else if (planIsDirty()) errors.push([null,'Your plan has unsaved changes. Save a snapshot first so this observation refers to the correct plan.']);
+    if (!$('observation').value.trim()) errors.push(['observation','Describe what you observed.']);
+    if ($('observation').value.length > LIMIT) errors.push(['observation','Keep the observation within 4000 characters.']);
+    if (!Object.hasOwn(choices.outcome,$('outcome').value)) errors.push(['outcome','Select a supported outcome.']);
+    if (observations.length >= MAX_ENTRIES) errors.push([null,'This journal has reached 500 observations. Export it and start a new journal.']);
+    if (errors.length) return fail(errors);
+    const id = 'o-'+String(observations.length+1).padStart(4,'0');
+    observations.push({id,createdAt:stamp(),planId:latest().id,outcome:$('outcome').value,note:$('observation').value});
+    $('observation').value = ''; $('outcome').value = 'unresolved'; fileDirty = true; render(); say('Observation '+id+' recorded as your report, not independently verified evidence. Export to keep it.');
+  });
+  $('example').addEventListener('click',() => {
+    if (hasContent() && !window.confirm('Replace only the current draft with an illustrative example? Saved snapshots remain. Export first to preserve unsaved draft edits.')) return;
+    clearErrors();
+    setDraft({
+      goal:'Complete a work report independently and keep control over my working time.',
+      barrier:'The report template has unclear field labels, and the keyboard path has not been checked.',
+      action:'Use a fictional sample report to check the required fields and keyboard path; record one blocking issue.',
+      evidence:'The blocking field can be identified and completed using the chosen access method, and the completed output is checked against the sample.',
+      readiness:'unknown',owner:'The person choosing this goal',
+      support:'A blank sample template and an agreed route to the person who can change it.',
+      helper:'Template owner — not contacted by this tool',supportStatus:'unknown',
+      constraints:'Use fictional data. Do not submit real work or automate consequential decisions. Stop if the output is unreliable.',reviewDate:'',kind:'illustrative'
+    });
+    fileDirty = true; render(); say('Illustrative example loaded. No person has been contacted, and no real-world result is claimed.'); $('goal').focus();
+  });
+  function bundle() {
+    return {app:APP,schemaVersion:VERSION,exportedAt:stamp(),draft:readDraft(),reviewDraft:{outcome:$('outcome').value,note:$('observation').value},plans,observations};
+  }
+  function download(content,type,name) {
+    const blob = new Blob([content],{type});
+    const url = URL.createObjectURL(blob); const a = document.createElement('a');
+    a.href = url; a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url),30000);
+  }
+  function makeText(data) {
+    const lines = [APP+' — readable journal','Exported: '+data.exportedAt,'All entries are self-reported or explicitly illustrative. No independent verification.','Files are unencrypted. No messages or reminders have been sent.',''];
+    const addFields = fields => { ids.forEach(id => lines.push(labels[id]+':',display(id,fields[id]),'')); lines.push('Feasibility note:',feasibility(fields),''); };
+    lines.push('CURRENT DRAFT (may differ from the last saved snapshot)',''); addFields(data.draft);
+    if (data.reviewDraft.note || data.reviewDraft.outcome !== 'unresolved') lines.push('UNSAVED OBSERVATION DRAFT',display('outcome',data.reviewDraft.outcome),data.reviewDraft.note,'');
+    lines.push('PLAN SNAPSHOTS AND LINKED OBSERVATIONS','');
+    for (const p of data.plans) {
+      lines.push('PLAN '+p.id+' | '+p.createdAt,''); addFields(p.fields);
+      for (const o of data.observations.filter(o => o.planId === p.id)) lines.push('OBSERVATION '+o.id+' | '+o.createdAt+' | Plan '+o.planId,display('outcome',o.outcome),o.note,'');
+    }
+    lines.push('LIMITS','The tool cannot provide services, funding, rights, or other people\'s agreement.','A date is a planning note, not a scheduled reminder.','Timestamps and imported records are unverified; this is not a tamper-proof audit log.','');
+    return lines.join('\n');
+  }
+  $('export-json').addEventListener('click',() => {
+    clearErrors(); const data = bundle();
+    try { const checked = validateBundle(data); const text = JSON.stringify(checked,null,2)+'\n';
+      if (new Blob([text]).size > MAX_BYTES) throw new Error('This journal exceeds the 1 MiB import limit. Export the readable report for preservation; then start a smaller journal.');
+      download(text,'application/json','dream-to-action-journal.json'); fileDirty = false;
+      say('Journal download requested. Verify the file was saved; it includes the draft and history and is not encrypted.');
+    } catch (error) { fail([[null,error.message]]); }
+  });
+  $('export-text').addEventListener('click',() => {
+    download(makeText(bundle()),'text/plain;charset=utf-8','dream-to-action-report.txt');
+    say('Readable report download requested. This text report cannot be reimported as a journal; JSON preserves the editable structure.');
+  });
+  $('print').addEventListener('click',() => { if (!latest()) return fail([[null,'Save a plan snapshot before printing.']]); window.print(); });
+  function object(value,name,keys) {
+    if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(key => !keys.includes(key)) || keys.some(key => !Object.hasOwn(value,key))) throw new Error(name+' has a missing or unsupported field.');
+  }
+  function timestamp(value) {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) return false;
+    const date = new Date(value); return !Number.isNaN(date.getTime()) && date.toISOString() === value;
+  }
+  function checkedFields(value,complete) {
+    object(value,'Plan fields',ids); const problems = validateFields(value,complete);
+    if (problems.length) throw new Error(problems[0][1]);
+    return Object.fromEntries(ids.map(id => [id,value[id]]));
+  }
+  function validateBundle(data) {
+    object(data,'Journal',['app','schemaVersion','exportedAt','draft','reviewDraft','plans','observations']);
+    if (data.app !== APP || data.schemaVersion !== VERSION) throw new Error('Unsupported journal type or schema version.');
+    if (!timestamp(data.exportedAt)) throw new Error('The journal export timestamp is invalid.');
+    if (!Array.isArray(data.plans) || !Array.isArray(data.observations) || data.plans.length > MAX_ENTRIES || data.observations.length > MAX_ENTRIES) throw new Error('Journal arrays are invalid or exceed 500 entries each.');
+    const draft = checkedFields(data.draft,false);
+    object(data.reviewDraft,'Observation draft',['outcome','note']);
+    if (!Object.hasOwn(choices.outcome,data.reviewDraft.outcome) || typeof data.reviewDraft.note !== 'string' || data.reviewDraft.note.length > LIMIT) throw new Error('The observation draft is invalid.');
+    const cleanPlans = data.plans.map((p,index) => {
+      object(p,'Plan snapshot',['id','createdAt','fields']);
+      if (p.id !== 'p-'+String(index+1).padStart(4,'0') || !timestamp(p.createdAt)) throw new Error('Plan IDs or timestamps are invalid.');
+      return {id:p.id,createdAt:p.createdAt,fields:checkedFields(p.fields,true)};
+    });
+    const existing = new Set(cleanPlans.map(p => p.id));
+    let lastPlanNumber = 0;
+    const cleanObservations = data.observations.map((o,index) => {
+      object(o,'Observation',['id','createdAt','planId','outcome','note']);
+      if (o.id !== 'o-'+String(index+1).padStart(4,'0') || !timestamp(o.createdAt) || !existing.has(o.planId)) throw new Error('Observation IDs, timestamps, or plan references are invalid.');
+      const planNumber = Number(o.planId.slice(2));
+      if (planNumber < lastPlanNumber) throw new Error('Observation order is inconsistent with forward-only plan revisions.');
+      lastPlanNumber = planNumber;
+      if (!Object.hasOwn(choices.outcome,o.outcome) || typeof o.note !== 'string' || !o.note.trim() || o.note.length > LIMIT) throw new Error('An observation has an invalid outcome or note.');
+      return {id:o.id,createdAt:o.createdAt,planId:o.planId,outcome:o.outcome,note:o.note};
+    });
+    return {app:APP,schemaVersion:VERSION,exportedAt:data.exportedAt,draft,reviewDraft:{outcome:data.reviewDraft.outcome,note:data.reviewDraft.note},plans:cleanPlans,observations:cleanObservations};
+  }
+  $('import-file').addEventListener('change',async () => {
+    const file = $('import-file').files[0]; if (!file || importBusy) return;
+    clearErrors();
+    const original = JSON.stringify(bundle(),(key,value) => key === 'exportedAt' ? undefined : value);
+    try {
+      if (file.size > MAX_BYTES) throw new Error('File is larger than 1 MiB. Nothing was imported.');
+      importBusy = true;
+      const data = validateBundle(JSON.parse(await file.text()));
+      const current = JSON.stringify(bundle(),(key,value) => key === 'exportedAt' ? undefined : value);
+      if (original !== current) throw new Error('The open journal changed while the file was read. Import again after finishing those edits.');
+      if (hasContent() && !window.confirm('Replace this open journal with the imported one? Export first to preserve your current work.')) { say('Import cancelled. Current work is unchanged.'); return; }
+      plans = data.plans; observations = data.observations; setDraft(data.draft);
+      $('outcome').value = data.reviewDraft.outcome; $('observation').value = data.reviewDraft.note;
+      fileDirty = false; render(); say('Journal restored. Imported entries and timestamps are unverified user data.');
+    } catch (error) { fail([[null,'Import rejected: '+(error instanceof SyntaxError ? 'The file is not valid JSON.' : error.message)]]); }
+    finally { $('import-file').value = ''; importBusy = false; }
+  });
+  $('clear').addEventListener('click',() => {
+    if (hasContent() && !window.confirm('Clear the open draft and journal? Export first to keep them. Exported files and browser/device traces are not deleted.')) return;
+    plans = []; observations = []; setDraft(blank()); $('review-form').reset(); fileDirty = false; clearErrors(); render(); say('Open journal cleared. Existing exported files and browser/device traces were not deleted.'); $('goal').focus();
+  });
+  window.addEventListener('beforeunload',event => { if (fileDirty) { event.preventDefault(); event.returnValue = ''; } });
+  setDraft(blank()); render();
+})();
+</script>
+</body>
+</html>

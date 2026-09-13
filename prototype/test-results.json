@@ -1,0 +1,195 @@
+{
+  "app_version": "0.1",
+  "date": "2026-09-13",
+  "environment": {
+    "browser": "Chromium",
+    "version": "144.0.7559.96",
+    "driver": "Playwright Python",
+    "mode": "Headless Chromium with HTML supplied through page.set_content; environment policy blocks file and loopback navigation"
+  },
+  "result": "PASS",
+  "passed": 43,
+  "failed": 0,
+  "checks": [
+    {
+      "check": "Self-contained HTML initializes when supplied directly to the browser",
+      "status": "PASS"
+    },
+    {
+      "check": "Blank state does not invent a plan or result",
+      "status": "PASS"
+    },
+    {
+      "check": "First keyboard stop is the skip link",
+      "status": "PASS"
+    },
+    {
+      "check": "Skip link moves focus to the main content",
+      "status": "PASS"
+    },
+    {
+      "check": "Every form control has an associated label",
+      "status": "PASS"
+    },
+    {
+      "check": "Every described-by reference exists",
+      "status": "PASS"
+    },
+    {
+      "check": "No duplicate HTML IDs",
+      "status": "PASS"
+    },
+    {
+      "check": "No positive tabindex overrides keyboard order",
+      "status": "PASS"
+    },
+    {
+      "check": "Routine feedback has a status live region",
+      "status": "PASS"
+    },
+    {
+      "check": "Required fields are validated without creating a plan",
+      "status": "PASS"
+    },
+    {
+      "check": "Validation errors receive keyboard focus",
+      "status": "PASS"
+    },
+    {
+      "check": "Error links move focus to the relevant control",
+      "status": "PASS"
+    },
+    {
+      "check": "Observation is rejected without a plan",
+      "status": "PASS"
+    },
+    {
+      "check": "Example is explicitly illustrative, not a claimed real result",
+      "status": "PASS"
+    },
+    {
+      "check": "Saving a snapshot creates one plan and no fake outcome",
+      "status": "PASS"
+    },
+    {
+      "check": "Unconfirmed required support is not treated as available",
+      "status": "PASS"
+    },
+    {
+      "check": "Readiness alone does not override unconfirmed support",
+      "status": "PASS"
+    },
+    {
+      "check": "Confirmed support still carries an independent-verification qualification",
+      "status": "PASS"
+    },
+    {
+      "check": "Contradictory required-support fields are flagged",
+      "status": "PASS"
+    },
+    {
+      "check": "Unavailable support is not counted as opportunity",
+      "status": "PASS"
+    },
+    {
+      "check": "Choosing to pause is preserved, not ranked as failure",
+      "status": "PASS"
+    },
+    {
+      "check": "An observation cannot silently attach to an outdated snapshot",
+      "status": "PASS"
+    },
+    {
+      "check": "Observation references its exact plan snapshot",
+      "status": "PASS"
+    },
+    {
+      "check": "Earlier plan snapshots are preserved",
+      "status": "PASS"
+    },
+    {
+      "check": "JSON export includes unsaved plan and observation drafts",
+      "status": "PASS"
+    },
+    {
+      "check": "JSON export preserves all snapshots and linked observations",
+      "status": "PASS"
+    },
+    {
+      "check": "Readable text export includes current draft, history, and unverified-data limits",
+      "status": "PASS"
+    },
+    {
+      "check": "Clear resets the open journal and form after confirmation",
+      "status": "PASS"
+    },
+    {
+      "check": "Import round-trip restores current draft and history",
+      "status": "PASS"
+    },
+    {
+      "check": "Import restores unfinished observation draft",
+      "status": "PASS"
+    },
+    {
+      "check": "Malformed JSON is rejected without overwriting current work",
+      "status": "PASS"
+    },
+    {
+      "check": "Broken provenance references are rejected atomically",
+      "status": "PASS"
+    },
+    {
+      "check": "Impossible imported calendar dates are rejected",
+      "status": "PASS"
+    },
+    {
+      "check": "Unknown schema versions are rejected",
+      "status": "PASS"
+    },
+    {
+      "check": "Oversized files are rejected before parsing",
+      "status": "PASS"
+    },
+    {
+      "check": "Imported text fields enforce length bounds",
+      "status": "PASS"
+    },
+    {
+      "check": "Imported markup is rendered as literal text, not HTML",
+      "status": "PASS"
+    },
+    {
+      "check": "No application HTTP/WebSocket requests occurred during the tested workflow",
+      "status": "PASS"
+    },
+    {
+      "check": "App source has no browser-storage calls and no cookies were created",
+      "status": "PASS"
+    },
+    {
+      "check": "Content Security Policy explicitly blocks network connections",
+      "status": "PASS"
+    },
+    {
+      "check": "The tested screen fits a 320 CSS-pixel viewport without horizontal overflow",
+      "status": "PASS"
+    },
+    {
+      "check": "No uncaught JavaScript errors occurred",
+      "status": "PASS"
+    },
+    {
+      "check": "No browser console errors occurred in the tested workflow",
+      "status": "PASS"
+    }
+  ],
+  "limits": [
+    "No real person or service-provider pilot was performed.",
+    "No JAWS, NVDA, VoiceOver, or other actual screen-reader session was run.",
+    "No full WCAG conformance audit or independent security audit was performed.",
+    "No real-world opportunity, income, housing, health, or employment result is claimed.",
+    "Only the included browser workflows and fixtures were tested.",
+    "Direct file:// and loopback-HTTP launch were blocked by test-environment policy. Browser checks supplied the identical self-contained HTML through page.set_content; direct local-file launch remains unverified."
+  ]
+}
