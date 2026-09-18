@@ -1,5 +1,7 @@
 # Dream to Action
 
+Current owner policy for this unlicensed project is no third-party commercial access unless explicitly granted. See [COMMERCIAL_ACCESS_POLICY.md](COMMERCIAL_ACCESS_POLICY.md).
+
 **One chosen goal. One real barrier. One usable next step. An honest review.**
 
 A person-directed, local-first prototype inspired by this project's founding discussion of the American way and the American dream: a fair chance to build a life you value, without denying that freedom to somebody else.
