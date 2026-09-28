@@ -2,13 +2,17 @@
 
 **Choose the direction. Make the next step possible. Keep the evidence.**
 
+**[Open the public app](https://redogit.github.io/conscience64/dream-to-action/)** · [About Me announcement](https://redogit.github.io/conscience64/about.html#announcements) · [Why it exists](https://redogit.github.io/conscience64/about.html#dream-to-action)
+
 Current owner policy remains **no third-party commercial access unless explicitly granted**. See [COMMERCIAL_ACCESS_POLICY.md](COMMERCIAL_ACCESS_POLICY.md). This update does not grant a new license or change that policy.
 
 The original planner now has a visual operational successor: a dashboard, action board, goal revisions, dependency checks, evidence history, and a dated reference library. The person remains the authority over the goal. Completing work is not automatically evidence of a better life.
 
 ## Start
 
-Download the repository and open **`index.html`**. It is a self-contained application with no account, runtime dependencies, analytics, or application network calls. The original application remains unchanged at [`prototype/dream-to-action.html`](prototype/dream-to-action.html).
+[Open Dream to Action in your browser](https://redogit.github.io/conscience64/dream-to-action/), or download the repository and open **`index.html`**. It is a self-contained application with no account, runtime dependencies, analytics, or application network calls. The original application remains unchanged at [`prototype/dream-to-action.html`](prototype/dream-to-action.html).
+
+The public site uses the already-enabled Conscience64 GitHub Pages host, serving a byte-identical copy of the tested Operations 0.2 release. **This repository remains the canonical source.** The dedicated `/Dream-To-Action/` and profile `/redogit/` Pages sites were not activated; the first profile-host deployment returned site Not Found. The public route above was then deployed and verified anonymously over HTTPS. [Successful Pages deployment](https://github.com/redogit/conscience64/actions/runs/36459090437) · [Exact-byte and live announcement checks](https://github.com/redogit/conscience64/actions/runs/36459096995).
 
 For a stable local browser-storage origin, Windows users can run `launch.cmd` with Python 3 installed. On another platform:
 
@@ -17,8 +21,6 @@ python tools/serve.py
 ```
 
 The optional server binds only to `127.0.0.1:8765`; `--port` and `--no-browser` are available. It only serves static files and does not receive journal data. Browser storage availability varies by browser and origin. Direct file navigation and loopback browsing were blocked by the managed validation environment, so those launch paths still need checking on the intended device. The identical full HTML was browser-tested through Playwright `page.set_content`.
-
-**Source is on GitHub; a live GitHub Pages deployment is not configured by this update.**
 
 ## What you can do
 
@@ -63,5 +65,7 @@ The September 28 update passed **24 state tests, 32 browser assertions, and a fr
 [Operational guide](docs/OPERATIONS.md) · [Data contract](docs/DATA.md) · [Implementation record](docs/superpowers/plans/2026-09-28-operations.md) · [Founding conversation](docs/FOUNDING_CONVERSATION.md) · [Original publication provenance](PROVENANCE.md)
 
 `prototype/`, the commercial-access policy, Decision Field profile, library-pattern record, and REDOGIT research/history policies remain unchanged. The former repository README is retained at `docs/history/README-before-operations.md`. Historical statements that the root entry point equals v0.1 apply to that earlier publication; the root now intentionally contains the operational successor.
+
+The public hosting projection is pinned to application commit `667e989dcad401829bb097726b3a14cc0aa90f2c` and SHA-256 `231fdadb14093df1028abe015f3c4d583b1031da5ae03048abff5244c3eac807`. Public hosting does not change the source license, publish visitor journals, or turn this static app into a backend service. Update the reviewed publication pin when releasing a new version.
 
 Next real-world milestone: one consenting person gains one usable choice. No participant pilot, service-provider agreement, eligibility determination, or real-world improvement is claimed by this software release.
