@@ -1,0 +1,57 @@
+name: Build and verify operations candidate
+
+on:
+  push:
+    branches: [operations-v02-20260928]
+    paths-ignore:
+      - 'index.html'
+      - 'data/demo.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Materialize exact staging source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init "$GITHUB_WORKSPACE"
+          cd "$GITHUB_WORKSPACE"
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "$GITHUB_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Generate the exact locally tested artifact and verify both versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/make_demo.cjs
+          python3 tools/build_operations.py
+          echo '231fdadb14093df1028abe015f3c4d583b1031da5ae03048abff5244c3eac807  index.html' | sha256sum -c -
+          python3 tools/verify.py
+      - name: Run operational and original browser regression checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install playwright==1.57.0
+          python3 -m playwright install --with-deps chromium
+          export CHROMIUM_PATH="$(python3 -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print(p.chromium.executable_path); p.stop()')"
+          python3 tests/browser_operations.py
+          python3 tools/test_browser.py
+      - name: Commit exact generated candidate to staging only
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html data/demo.json
+          git commit -m 'Materialize verified operations candidate'
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin HEAD:refs/heads/operations-v02-20260928

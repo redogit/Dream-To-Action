@@ -1,0 +1,75 @@
+{
+  "schema": "dta-verification/1",
+  "recorded_utc": "2026-09-28T16:55:03.493298+00:00",
+  "baseline_commit": "4b8957d6dd88d07552b8d58cbbbd549288686748",
+  "state_tests": {
+    "passed": 24,
+    "failed": 0,
+    "command": "node --test tests/operations.test.cjs"
+  },
+  "browser_tests": {
+    "run_utc": "2026-09-28T16:59:25.202534+00:00",
+    "browser": "144.0.7559.96",
+    "launch_mode": "page.set_content (direct file launch failed: Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at file:///mnt/data/Dream-To-Action/index.html)",
+    "passed": 32,
+    "failed": 0,
+    "checks": [
+      "Personal workspace starts with zero goal records",
+      "Charts have accessible textual table equivalents",
+      "First keyboard stop is the skip link",
+      "Skip link focuses main content",
+      "Demo has six goals",
+      "Demo is prominently marked synthetic",
+      "Demo board has eighteen actions",
+      "Action search filters records",
+      "Demo data does not leak into personal actions",
+      "A personal goal can be created",
+      "Explicit no-support action enters ready lane",
+      "Completion is recorded in completed lane",
+      "Completion did not fabricate improvement evidence",
+      "Observation is rendered separately",
+      "JSON contains real workspace history and mode",
+      "Restore recovers goals actions and evidence",
+      "Invalid import leaves current workspace unchanged",
+      "Oversized import is rejected before replacement",
+      "CSV export includes action and mode",
+      "Handoff includes original goal and observation",
+      "User markup stays literal text",
+      "Six dated primary-source references appear",
+      "Resource search filters",
+      "Reference does not auto-confirm support",
+      "Overview fits 320 CSS pixels",
+      "Overview fits 390 CSS pixels",
+      "Overview fits 768 CSS pixels",
+      "Action board fits 320 CSS pixels",
+      "No application network requests",
+      "No uncaught errors",
+      "No console errors",
+      "Every input has a label"
+    ],
+    "limits": [
+      "Synthetic workflows only",
+      "No actual screen-reader session",
+      "No independent security or accessibility audit",
+      "No participant pilot",
+      "No hosted deployment tested"
+    ]
+  },
+  "legacy_rerun": {
+    "passed": 43,
+    "failed": 0,
+    "browser": "144.0.7559.96",
+    "execution": "Original test_app.py in a disposable copy; historical fixed date in original harness is not a fresh execution timestamp"
+  },
+  "original_verifier_blob": "a1ea5c12dd807d07e70adde90dac3e4d4ad50dce",
+  "preserved_prototype_tree": "b371f793363af7633ae34ec8b13456d419bcf85c",
+  "changes": "Operational successor replaces only the root application entry point; predecessor and publication/rights/history policies are retained.",
+  "limits": [
+    "Local software checks, not hosted CI results",
+    "No real-world pilot",
+    "No native browser-backup round-trip verified in this managed origin",
+    "No live GitHub Pages deployment",
+    "No complete accessibility/security audit"
+  ],
+  "application_sha256": "231fdadb14093df1028abe015f3c4d583b1031da5ae03048abff5244c3eac807"
+}
