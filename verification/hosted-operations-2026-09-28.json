@@ -1,0 +1,41 @@
+{
+  "schema": "dta-hosted-verification/1",
+  "source_commit": "14dc392e7cc0cb82e06385d879352cacc950373d",
+  "generated_commit": "dbc4c3b349c0460ad84026c969f3fb69d5aa52a2",
+  "workflow_run": "https://github.com/redogit/Dream-To-Action/actions/runs/36456040639",
+  "workflow_run_id": 36456040639,
+  "job_id": 109042498086,
+  "conclusion": "success",
+  "evidence": "Read back completed job steps and decoded GitHub job logs after execution; not inferred from workflow configuration.",
+  "application_sha256": "231fdadb14093df1028abe015f3c4d583b1031da5ae03048abff5244c3eac807",
+  "application_bytes": 78619,
+  "locally_tested_and_remotely_generated_application_identical": true,
+  "predecessor_file_hashes_checked": 11,
+  "predecessor_files_preserved": 12,
+  "state_tests": {"passed": 24, "failed": 0},
+  "operational_browser_tests": {
+    "run_utc": "2026-09-28T17:09:07.599867+00:00",
+    "browser": "143.0.7499.4",
+    "driver": "Playwright Python 1.57.0",
+    "platform": "GitHub-hosted Ubuntu runner",
+    "launch_mode": "file://",
+    "passed": 32,
+    "failed": 0
+  },
+  "original_browser_regressions": {
+    "browser": "143.0.7499.4",
+    "launch_mode": "page.set_content in the unchanged original harness",
+    "passed": 43,
+    "failed": 0,
+    "result_observed_at_utc": "2026-09-28T17:09:09.8859588Z"
+  },
+  "publication_boundary": "The temporary staging build workflow was removed from the main publication tree. The pre-existing read-only main integrity workflow remains. The staging branch preserves build transport and verification evidence.",
+  "limits": [
+    "Linux headless Chromium file launch is verified, not every intended device or browser",
+    "No native browser-backup persistence round-trip was exercised",
+    "No loopback-server browser workflow was exercised",
+    "No actual screen-reader session, comprehensive accessibility audit, or independent security audit",
+    "No live GitHub Pages deployment",
+    "No participant pilot or real-world benefit established"
+  ]
+}

@@ -1,150 +1,33 @@
-"""Check the REDOGIT contract, preserved release, entry point, rebuild, and inline policy hashes."""
-from __future__ import annotations
-import base64
-import hashlib
-import json
-import re
-import shutil
-import subprocess
-import sys
-import tempfile
+"""Verify preserved predecessor in isolation, then the operational successor."""
 from pathlib import Path
+import json, shutil, subprocess, sys, tempfile
+ROOT=Path(__file__).resolve().parents[1]
 
-ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / 'prototype'
-CONTRACT = ROOT / 'redogit.json'
-EXPECTED = {
-    'dream-to-action.html', 'README.md', 'README.txt', 'PILOT.md', 'TESTING.md',
-    'build.py', 'app.js', 'style.css', 'test_app.py', 'test-results.json',
-    'example-journal.json',
-}
-GENERATED = ('dream-to-action.html', 'app.js', 'style.css')
-EXPECTED_HISTORY = {
-    'preserve_predecessors': True,
-    'preserve_failures': True,
-    'preserve_unresolved_remainder': True,
-    'preserve_source_native_identity': True,
-    'rewrite_history': False,
-}
-EXPECTED_CHECKS = ['assumption', 'test', 'unknown']
-EXPECTED_EVIDENCE_CLASSES = [
-    'executed-and-verified',
-    'externally-validated',
-    'formal-consequence',
-    'hypothesis-or-open-question',
-]
-REQUIRED_DISTINCTIONS = {
-    'UNKNOWN != ABSENT',
-    'UNASSIGNED != ABSENT',
-    'UNSELECTED != FALSE',
-    'INDEX_MISS != ABSENCE',
-    'RELATED != SUPPORTS',
-    'SEMANTIC_SIMILARITY != IDENTITY',
-    'SOURCE != RECONSTRUCTION',
-    'BYTE_IDENTITY != SEMANTIC_TRUTH',
-    'CURRENT_NAVIGATION != HISTORICAL_SOURCE',
-    'OBSERVATION != INTERPRETATION',
-    'VIEWPOINT_CHANGE != TASK_CHANGE',
-    'SELECTION != GLOBAL_OPTIMALITY',
-    'FINITE_VERIFICATION != UNIVERSALITY',
-    'LOSS_ACKNOWLEDGED != LOSS_CONCEALED',
-    'EVALUATION_COMPLETE != PROMOTION_APPROVED',
-    'PERSON != RECORDED_MODEL',
-    'USER_GOAL != SYSTEM_GOAL',
-    'PREDECESSOR != SUCCESSOR',
-    'INTERNAL_CONSISTENCY != EXTERNAL_VALIDATION',
-    'CLAIM != EVIDENCE',
-}
-DREAM_DISTINCTIONS = {
-    'GOAL != OUTCOME',
-    'PLAN != PROMISE',
-    'NAMED_HELPER != CONFIRMED_COMMITMENT',
-    'REVIEW_DATE != REMINDER',
-    'HARDSHIP != PERSONAL_FAILURE',
-    'USER_INPUT != VERIFIED_FACT',
-    'ACCESSIBLE_MARKUP != ASSISTIVE_TECHNOLOGY_CERTIFICATION',
-}
+def run(args, cwd=ROOT):
+    subprocess.run(args,cwd=cwd,check=True,timeout=60)
 
-
-def require(condition: bool, message: str) -> None:
-    if not condition:
-        raise ValueError(message)
-
-
-def verify_contract() -> None:
-    contract = json.loads(CONTRACT.read_text(encoding='utf-8'))
-    require(contract.get('schema') == 'redogit/v1', 'Unexpected REDOGIT schema')
-    require(contract.get('repository') == 'redogit/Dream-To-Action', 'Unexpected REDOGIT repository')
-    current = contract.get('current')
-    require(isinstance(current, dict), 'Missing REDOGIT current object')
-    require(current.get('status') == 'current', 'Dream to Action REDOGIT status is not current')
-    require(current.get('verify') == 'python3 tools/verify.py', 'Declared verifier changed')
-    require(contract.get('history_policy') == EXPECTED_HISTORY, 'History policy changed')
-
-    research = contract.get('research_policy')
-    require(isinstance(research, dict), 'Missing research policy')
-    require(research.get('surface') == 'I/R/P/O', 'Research surface changed')
-    require(research.get('checks') == EXPECTED_CHECKS, 'Research checks changed')
-    require(research.get('evidence_classes') == EXPECTED_EVIDENCE_CLASSES, 'Evidence classes changed')
-    distinctions = research.get('required_distinctions')
-    require(isinstance(distinctions, list), 'Required distinctions missing')
-    require(REQUIRED_DISTINCTIONS.issubset(set(distinctions)), 'A shared REDOGIT distinction is missing')
-    domain = research.get('domain_distinctions')
-    require(isinstance(domain, list), 'Dream domain distinctions missing')
-    require(DREAM_DISTINCTIONS.issubset(set(domain)), 'A Dream to Action distinction is missing')
-
-
-def main() -> None:
-    verify_contract()
-    entries: dict[str, str] = {}
-    for line in (SOURCE / 'MANIFEST.sha256').read_text(encoding='utf-8').splitlines():
-        match = re.fullmatch(r'([0-9a-f]{64})  ([A-Za-z0-9_.-]+)', line)
-        require(match is not None, 'Malformed release manifest entry')
-        digest, name = match.groups()
-        require(name not in entries, 'Duplicate release manifest entry: ' + name)
-        entries[name] = digest
-    require(set(entries) == EXPECTED, 'Release manifest membership changed')
-    require({p.name for p in SOURCE.iterdir()} == EXPECTED | {'MANIFEST.sha256'},
-            'The preserved prototype has missing or extra entries')
-    for name, digest in entries.items():
-        path = SOURCE / name
-        require(path.is_file() and not path.is_symlink(), 'Not a regular release file: ' + name)
-        require(hashlib.sha256(path.read_bytes()).hexdigest() == digest,
-                'Release hash mismatch: ' + name)
-    application = (SOURCE / 'dream-to-action.html').read_bytes()
-    require((ROOT / 'index.html').read_bytes() == application,
-            'index.html differs from the preserved standalone application')
-    with tempfile.TemporaryDirectory(prefix='dream-build-') as temporary:
-        work = Path(temporary) / 'prototype'
-        shutil.copytree(SOURCE, work)
-        subprocess.run([sys.executable, '-X', 'utf8', str(work / 'build.py')],
-                       check=True, timeout=30, capture_output=True, text=True)
-        for name in GENERATED:
-            # Python text output may use CRLF on Windows; canonical release text is LF.
-            rebuilt = (work / name).read_bytes().replace(b'\r\n', b'\n')
-            require(rebuilt == (SOURCE / name).read_bytes(), 'Canonical rebuild differs: ' + name)
-    text = application.decode('utf-8')
-    policies = re.findall(r'http-equiv="Content-Security-Policy" content="([^"]+)"', text)
-    require(len(policies) == 1, 'Expected exactly one inline security policy')
-    policy = policies[0]
-    for tag, directive in [('script', 'script-src'), ('style', 'style-src')]:
-        blocks = re.findall('<' + tag + '>(.*?)</' + tag + '>', text, flags=re.S)
-        require(len(blocks) == 1, 'Expected exactly one inline ' + tag + ' block')
-        encoded = base64.b64encode(hashlib.sha256(blocks[0].encode('utf-8')).digest()).decode('ascii')
-        require(directive + " 'sha256-" + encoded + "'" in policy,
-                'Inline security-policy hash does not match ' + tag)
-    require("connect-src 'none'" in policy, 'Application connection restriction changed')
-    for name in ('test-results.json', 'example-journal.json'):
-        json.loads((SOURCE / name).read_text(encoding='utf-8'))
-    print(json.dumps({'result': 'PASS', 'redogit_contract': True,
-                      'release_hashes': len(entries),
-                      'preserved_files': len(EXPECTED) + 1,
-                      'canonical_rebuild_matches': len(GENERATED),
-                      'root_entry_point_identical': True, 'inline_policy_hashes_match': True}, indent=2))
-
-
-if __name__ == '__main__':
+if __name__=='__main__':
     try:
-        main()
-    except (OSError, ValueError, subprocess.SubprocessError) as error:
-        raise SystemExit('Verification failed: ' + str(error))
+        # The old verifier is retained byte-for-byte. Its root identity check is
+        # evaluated against the predecessor, not falsely applied to the successor.
+        with tempfile.TemporaryDirectory(prefix='dta-predecessor-') as temporary:
+            d=Path(temporary)
+            shutil.copytree(ROOT/'prototype',d/'prototype')
+            (d/'tools').mkdir()
+            shutil.copy2(ROOT/'tools/verify_v01.py',d/'tools/verify.py')
+            shutil.copy2(ROOT/'redogit.json',d/'redogit.json')
+            shutil.copy2(ROOT/'prototype/dream-to-action.html',d/'index.html')
+            print('PREDECESSOR: original package and preserved REDOGIT policies',flush=True)
+            run([sys.executable,'tools/verify.py'],d)
+        print('SUCCESSOR: deterministic build, source validation, and state tests',flush=True)
+        run([sys.executable,'tools/build_operations.py','--check'])
+        run(['node','--check','operational/core.js'])
+        run(['node','--check','operational/app.js'])
+        run(['node','--test','tests/operations.test.cjs'])
+        run(['node','-e',"const C=require('./operational/core.js');C.validate(require('./data/demo.json'));console.log('PASS: illustrative data validates');"])
+        resources=json.loads((ROOT/'data/resources.json').read_text(encoding='utf-8'))
+        assert len(resources)==6 and len({r['id'] for r in resources})==6
+        assert all(r['url'].startswith('https://') and r['checked']=='2026-09-28' and r['confirm'] for r in resources)
+        print('PASS: predecessor and successor checks. Reference integrity is not a live availability check.')
+    except (OSError,AssertionError,subprocess.SubprocessError) as error:
+        raise SystemExit('Verification failed: '+str(error))
