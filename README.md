@@ -1,5 +1,7 @@
 # Dream to Action · Operations 0.2
 
+> **Public page:** https://redogit.github.io/Dream-To-Action/ · **Main / About:** https://redogit.github.io/redogit/
+
 **Choose the direction. Make the next step possible. Keep the evidence.**
 
 **[Open the public app](https://redogit.github.io/conscience64/dream-to-action/)** · [Project page](https://redogit.github.io/Dream-To-Action/) · [Main / About](https://redogit.github.io/redogit/)
