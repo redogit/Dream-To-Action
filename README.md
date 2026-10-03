@@ -2,7 +2,7 @@
 
 **Choose the direction. Make the next step possible. Keep the evidence.**
 
-**[Open the public app](https://redogit.github.io/conscience64/dream-to-action/)** · [About Me announcement](https://redogit.github.io/conscience64/about.html#announcements) · [Why it exists](https://redogit.github.io/conscience64/about.html#dream-to-action)
+**[Open the public app](https://redogit.github.io/conscience64/dream-to-action/)** · [Project page](https://redogit.github.io/Dream-To-Action/) · [Main / About](https://redogit.github.io/redogit/)
 
 Current owner policy remains **no third-party commercial access unless explicitly granted**. See [COMMERCIAL_ACCESS_POLICY.md](COMMERCIAL_ACCESS_POLICY.md). This update does not grant a new license or change that policy.
 
@@ -12,7 +12,7 @@ The original planner now has a visual operational successor: a dashboard, action
 
 [Open Dream to Action in your browser](https://redogit.github.io/conscience64/dream-to-action/), or download the repository and open **`index.html`**. It is a self-contained application with no account, runtime dependencies, analytics, or application network calls. The original application remains unchanged at [`prototype/dream-to-action.html`](prototype/dream-to-action.html).
 
-The public site uses the already-enabled Conscience64 GitHub Pages host, serving a byte-identical copy of the tested Operations 0.2 release. **This repository remains the canonical source.** The dedicated `/Dream-To-Action/` and profile `/redogit/` Pages sites were not activated; the first profile-host deployment returned site Not Found. The public route above was then deployed and verified anonymously over HTTPS. [Successful Pages deployment](https://github.com/redogit/conscience64/actions/runs/36459090437) · [Exact-byte and live announcement checks](https://github.com/redogit/conscience64/actions/runs/36459096995).
+The operational app remains on the verified Conscience64 GitHub Pages route, serving the tested Operations 0.2 release. **This repository remains the canonical source.** On October 2, 2026, the dedicated [Dream-To-Action project page](https://redogit.github.io/Dream-To-Action/) and canonical [redogit main/About page](https://redogit.github.io/redogit/) were enabled and deployed. The earlier profile-host `Pages site Not Found` result remains historical evidence of the previous state, not the current state. [Original app deployment](https://github.com/redogit/conscience64/actions/runs/36459090437) · [Original exact-byte/live checks](https://github.com/redogit/conscience64/actions/runs/36459096995).
 
 For a stable local browser-storage origin, Windows users can run `launch.cmd` with Python 3 installed. On another platform:
 
